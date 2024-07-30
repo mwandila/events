@@ -1,0 +1,48 @@
+import type { Metadata } from "next";
+
+export const siteConfig: Metadata = {
+  title: "quicktime",
+  description: "quick time.",
+  keywords: [
+    "reactjs",
+    "nextjs",
+    "vercel",
+    "react",
+    "auth-js",
+    "next-auth",
+    "shadcn",
+    "shadcn-ui",
+    "radix-ui",
+    "cn",
+    "clsx",
+    "securet-auth",
+    "server-actions",
+    "sonner",
+    "custom-hooks",
+    "nosql",
+    "postgresql",
+    "neon-db",
+    "prisma",
+    "react-icons",
+    "modern-ui",
+    "modern-ux",
+    "postcss",
+    "prettier",
+    "react-dom",
+    "tailwindcss",
+    "tailwindcss-animate",
+    "ui/ux",
+    "js",
+    "javascript",
+    "typescript",
+    "eslint",
+    "html",
+    "css",
+  ] as Array<string>,
+  authors: {
+    name: "mwandila",
+    url: "https://github.com/mwandila/",
+  },
+} as const;
+
+export const sourceCode = "https://github.com/mwandila/QuickTimeEvents" as const;
