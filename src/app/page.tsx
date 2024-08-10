@@ -21,7 +21,7 @@ export default function Home() {
       <HowItWorksSection/>
       <PricingSection/>
       <FAQSection/>
-      <TestimonialsSection/>
+      <TestimonialsSection quote={""} name={""} role={""} image={""}/>
       <CTASection/>
       <TeamSection/>
     </AppLayout>

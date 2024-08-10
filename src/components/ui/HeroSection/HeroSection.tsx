@@ -7,7 +7,7 @@ import { DateTimeComponent } from "../time/Time";
 
 const HeroSection = () => (
   <section
-    className="relative flex flex-col items-start justify-center p-1 bg-gradient-to-r from-orange-300 to-blue-300 min-h-[68vh]"
+    className="relative flex flex-col items-start justify-center p-1 bg-gradient-to-r from-orange-300 to-blue-300 mb-5 mr-10 ml-10 min-h-[68vh]"
     style={{
       backgroundImage: `url(${girls.src})`,
       backgroundSize: 'cover',

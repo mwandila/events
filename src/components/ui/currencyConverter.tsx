@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,6 +16,8 @@ const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ userCountry }) =>
   const [toCurrency, setToCurrency] = useState('EUR');
   const [exchangeRate, setExchangeRate] = useState(1);
   const [convertedAmount, setConvertedAmount] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Map of countries to their primary currency
@@ -35,34 +39,28 @@ const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ userCountry }) =>
   }, [userCountry]);
 
   useEffect(() => {
-    // In a real application, you would fetch the exchange rate from an API
-    // For this example, we'll use mock exchange rates
-    const mockExchangeRates: { [key: string]: number } = {
-      'USDEUR': 0.85,
-      'USDGBP': 0.74,
-      'USDJPY': 110.0,
-      'USDCNY': 6.47,
-      'EURUSD': 1.18,
-      'EURGBP': 0.87,
-      'GBPUSD': 1.35,
-      'GBPEUR': 1.15,
-      'USDZMW': 22.00, // Example rate for USD to ZMW
-      'ZMWUSD': 0.045,  // Example rate for ZMW to USD
-      'USDMWK': 800.00, // Example rate for USD to MWK
-      'MWKUSD': 0.00125, // Example rate for MWK to USD
-      // Add more exchange rates as needed
+    const fetchExchangeRate = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`https://v6.exchangerate-api.com/v6/${process.env.NEXT_PUBLIC_EXCHANGE_RATE_API_KEY}/latest/${fromCurrency}`);
+        const data = await response.json();
+
+        if (data.result === "success") {
+          const rate = data.conversion_rates[toCurrency];
+          setExchangeRate(rate);
+        } else {
+          throw new Error('Failed to fetch exchange rate');
+        }
+      } catch (error) {
+        console.error('Error fetching exchange rate:', error);
+        setError('Failed to fetch exchange rate. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const rateKey = `${fromCurrency}${toCurrency}`;
-    const inverseRateKey = `${toCurrency}${fromCurrency}`;
-
-    if (mockExchangeRates[rateKey]) {
-      setExchangeRate(mockExchangeRates[rateKey]);
-    } else if (mockExchangeRates[inverseRateKey]) {
-      setExchangeRate(1 / mockExchangeRates[inverseRateKey]);
-    } else {
-      setExchangeRate(1); // Default to 1 if no rate is found
-    }
+    fetchExchangeRate();
   }, [fromCurrency, toCurrency]);
 
   useEffect(() => {
@@ -114,11 +112,17 @@ const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ userCountry }) =>
               </SelectContent>
             </Select>
           </div>
-          <div>
-            <p className="text-lg font-semibold">
-              {amount} {fromCurrency} = {convertedAmount.toFixed(2)} {toCurrency}
-            </p>
-          </div>
+          {loading ? (
+            <p>Loading exchange rate...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <div>
+              <p className="text-lg font-semibold">
+                {amount} {fromCurrency} = {convertedAmount.toFixed(2)} {toCurrency}
+              </p>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
